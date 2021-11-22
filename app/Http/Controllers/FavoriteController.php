@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FavoriteRequest;
+use App\Http\Resources\FavoriteCollection;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use App\Http\Resources\Favorite as FavoriteResource;
 
 class FavoriteController extends Controller
 {
@@ -12,9 +15,10 @@ class FavoriteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = $request->user();
+        return new FavoriteCollection($user->favorites);
     }
 
     /**
@@ -24,7 +28,7 @@ class FavoriteController extends Controller
      */
     public function create()
     {
-        //
+        //we don't neeed to return a view here
     }
 
     /**
@@ -33,9 +37,14 @@ class FavoriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FavoriteRequest $request)
     {
-        //
+        //storing a favorite for the client
+        $favorite = Favorite::create([
+            'user_id' => $request->user_id,
+            'opportunity_id' => $request->opportunity_id
+        ]);
+        return new FavoriteResource($favorite);
     }
 
     /**
@@ -46,7 +55,7 @@ class FavoriteController extends Controller
      */
     public function show(Favorite $favorite)
     {
-        //
+        return new FavoriteResource($favorite);
     }
 
     /**
@@ -67,9 +76,13 @@ class FavoriteController extends Controller
      * @param  \App\Models\Favorite  $favorite
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Favorite $favorite)
+    public function update(FavoriteRequest $request, Favorite $favorite)
     {
-        //
+        $favorite->update([
+            'user_id' => $request->user_id,
+            'opportunity_id' => $request->opportunity_id
+        ]);
+        return new FavoriteResource($favorite);
     }
 
     /**
@@ -81,5 +94,6 @@ class FavoriteController extends Controller
     public function destroy(Favorite $favorite)
     {
         //
+        $favorite->delete();
     }
 }

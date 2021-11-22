@@ -38,8 +38,19 @@ Route::group(['prefix' => 'lookups', 'middleware' => 'auth:api'], function (){
     Route::resource('category', 'CategoryController');
     Route::resource('country', 'CountryController');
 });
-Route::resource('opportunity', 'OpportunityController')->middleware('auth:api');
-Route::resource('opportunitydetails', 'OpportunityDetailController');
+
+Route::group(['middleware' => 'auth:api'], function(){
+    //Opportunity
+    Route::resource('opportunity', 'OpportunityController');
+    Route::resource('opportunitydetails', 'OpportunityDetailController');
+
+    //Questions
+    Route::resource('question', 'QuestionController');
+
+    //Favorite
+    Route::resource('favorite', 'FavoriteController');
+});
+
 
 //crud operations done
 

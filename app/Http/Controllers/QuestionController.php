@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QuestionRequest;
+use App\Http\Resources\QuestionCollection;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Http\Resources\Question as QuestionResource;
 
 class QuestionController extends Controller
 {
@@ -14,7 +17,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        return new QuestionCollection(Question::paginate(10));
     }
 
     /**
@@ -33,9 +36,13 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(QuestionRequest $request)
     {
-        //
+        $question = Question::create([
+            'question' => $request->question,
+            'created_by' => $request->createdBy
+        ]);
+        return new QuestionResource($question);
     }
 
     /**
@@ -44,7 +51,7 @@ class QuestionController extends Controller
      * @param  \App\Models\Forum  $forum
      * @return \Illuminate\Http\Response
      */
-    public function show(Forum $forum)
+    public function show(Question $question)
     {
         //
     }
@@ -55,7 +62,7 @@ class QuestionController extends Controller
      * @param  \App\Models\Forum  $forum
      * @return \Illuminate\Http\Response
      */
-    public function edit(Forum $forum)
+    public function edit(Question $question)
     {
         //
     }
@@ -67,9 +74,14 @@ class QuestionController extends Controller
      * @param  \App\Models\Forum  $forum
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Forum $forum)
+    public function update(QuestionRequest $request, Question $question)
     {
-        //
+        $question->update([
+            'question' => $request->question,
+            'created_by' => $request->createdBy
+        ]);
+
+        return new QuestionResource($question);
     }
 
     /**
@@ -78,8 +90,8 @@ class QuestionController extends Controller
      * @param  \App\Models\Forum  $forum
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Forum $forum)
+    public function destroy(Question $question)
     {
-        //
+
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OpportunityDetailRequest;
 use App\Models\OpportunityDetail;
+use App\Http\Resources\OpportunityDetail as OpportunityDetailResource;
 use Illuminate\Http\Request;
 
 class OpportunityDetailController extends Controller
@@ -14,7 +16,7 @@ class OpportunityDetailController extends Controller
      */
     public function index()
     {
-        //
+        //we don't really need to see opportunity detail index till we don't need to see the admin panel
     }
 
     /**
@@ -24,7 +26,7 @@ class OpportunityDetailController extends Controller
      */
     public function create()
     {
-        //
+        //we don't need this to
     }
 
     /**
@@ -33,9 +35,21 @@ class OpportunityDetailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OpportunityDetailRequest $request)
     {
-        //
+        $opportunityDetail = OpportunityDetail::create([
+            'opportunity_id' => $request->opportunityId,
+            'benefits' => $request->benefits,
+            'application_process' => $request->applicationProcess,
+            'eligibilities' => $request->eligibilities,
+            'start_date' => $request->startDate,
+            'end_date' => $request->endDate,
+            'official_link' => $request->officialLink,
+            'further_queries' => $request->furtherQueries,
+            'eligible_regions' => json_encode($request->eligibleRegions)
+        ]);
+
+        return new OpportunityDetailResource($opportunityDetail);
     }
 
     /**
@@ -46,7 +60,7 @@ class OpportunityDetailController extends Controller
      */
     public function show(OpportunityDetail $opportunityDetail)
     {
-        //
+        return new OpportunityDetailResource($opportunityDetail);
     }
 
     /**
@@ -67,9 +81,21 @@ class OpportunityDetailController extends Controller
      * @param  \App\Models\OpportunityDetail  $opportunityDetail
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OpportunityDetail $opportunityDetail)
+    public function update(OpportunityDetailRequest $request, OpportunityDetail $opportunityDetail)
     {
-        //
+        $opportunityDetail->update([
+            'opportunity_id' => $request->opportunityId,
+            'benefits' => $request->benefits,
+            'application_process' => $request->applicationProcess,
+            'eligibilities' => $request->eligibilities,
+            'start_date' => $request->startDate,
+            'end_date' => $request->endDate,
+            'official_link' => $request->officialLink,
+            'further_queries' => $request->furtherQueries,
+            'eligible_regions' => json_encode($request->eligibleRegions)
+        ]);
+
+        return new OpportunityDetailResource($opportunityDetail);
     }
 
     /**
@@ -80,6 +106,6 @@ class OpportunityDetailController extends Controller
      */
     public function destroy(OpportunityDetail $opportunityDetail)
     {
-        //
+        //we don't need to delete oportunity resource
     }
 }
